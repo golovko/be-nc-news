@@ -18,9 +18,8 @@ describe('GET /api/topics', () => {
     test('should return array of topics', () => { 
         return query(app)
         .get('/api/topics/')
-        //.expect(200)
+        .expect(200)
         .then((res) => {
-            console.log(res.body);
             const {topics} = res.body;
             expect(topics.length).toBe(3);
             topics.forEach(topic => {
@@ -28,5 +27,14 @@ describe('GET /api/topics', () => {
                 expect(typeof topic.slug).toBe('string');
             });
         })
+     })
+ })
+
+ // general
+ describe('general', () => { 
+    test('return 400 if requested endpoint not exist', () => { 
+        return query(app)
+        .get('/api/not-exist/')
+        .expect(400)
      })
  })
