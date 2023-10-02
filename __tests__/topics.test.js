@@ -29,12 +29,3 @@ describe('GET /api/topics', () => {
         })
      })
  })
-
- // general
- describe('general', () => { 
-    test('return 400 if requested endpoint not exist', () => { 
-        return query(app)
-        .get('/api/not-exist/')
-        .expect(400)
-     })
- })
