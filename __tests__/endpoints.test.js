@@ -79,7 +79,7 @@ describe('GET /api/articles', () => {
           expect(errorMessage).toBe('Not found');
       });
   });
-  test.only('should return 400 if provided id is not a number ', () => { 
+  test('should return 400 if provided id is not a number ', () => { 
     return query(app)
       .get('/api/articles/5d')
       .expect(400)

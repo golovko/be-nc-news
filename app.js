@@ -3,7 +3,7 @@ const app = express();
 const { getTopics } = require('./controllers/topics.controller.js');
 const { getEndpoints } = require('./controllers/endpoints.controller.js');
 const { getArticleById } = require('./controllers/articles.controller.js');
-const errorHandler = require('./errors/errorHandler.js');
+const {customErrors, psqlErrors} = require('./errors/errorHandler.js');
 
 // endpoints
 app.get('/api', getEndpoints);
@@ -20,6 +20,7 @@ app.use((req, res, next) => {
   })
 
 // error handling
-app.use(errorHandler);
+app.use(psqlErrors);
+app.use(customErrors);
 
 module.exports = app;

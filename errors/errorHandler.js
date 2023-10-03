@@ -1,4 +1,4 @@
-const errorHandler = (err, req, res, next) => {
+exports.customErrors = (err, req, res, next) => {
     console.log(err);
     
     // default
@@ -19,4 +19,12 @@ const errorHandler = (err, req, res, next) => {
     next(err)
 }
 
-module.exports = errorHandler;
+exports.psqlErrors = (err, req, res, next) => {
+    console.log(err);
+
+    if(err.code === '22P02') {
+        res.status(400).send({ errorMessage: 'Bad request' });
+    } else {
+    next (err);
+    }
+}

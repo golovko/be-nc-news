@@ -1,16 +1,10 @@
 const db = require('../db/connection');
 
 exports.fetchArticles = (articleId) => {
-    let whereId = '';
-    const values = [];
-    if(articleId){
-        whereId = ` WHERE article_id = $1`;
-        values.push(articleId);
-    }
     return db.query(`
         SELECT * FROM articles
-        ${whereId}
-    `, values)
+        WHERE article_id = $1
+    `, [articleId])
     .then((data) => {
         if(data.rows.length === 0) {
             return Promise.reject({errorCode: 404})
