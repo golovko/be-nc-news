@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const { getTopics } = require('./controllers/topics.controller.js');
 const { getEndpoints } = require('./controllers/endpoints.controller.js');
-const { getArticleById } = require('./controllers/articles.controller.js');
+const { getArticleById, getArticles } = require('./controllers/articles.controller.js');
 const {customErrors, psqlErrors} = require('./errors/errorHandler.js');
 
 // endpoints
@@ -13,6 +13,7 @@ app.get('/api/topics', getTopics);
 
 // articles
 app.get('/api/articles/:article_id', getArticleById);
+app.get('/api/articles', getArticles);
 
 //overriding default express error for endpoints that not exist 
 app.use((req, res, next) => {
