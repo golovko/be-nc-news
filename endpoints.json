@@ -38,5 +38,17 @@
       "votes": 0,
       "article_img_url": "https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg"
     }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all comments for an article",
+    "exampleResponse":
+  {
+    "comment_id": 1,
+    "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+    "votes": 16,
+    "author": "butter_bridge",
+    "article_id": 9,
+    "created_at": 1586179020000
+  }
   }
 }

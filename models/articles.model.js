@@ -30,7 +30,6 @@ exports.fetchArticles = () => {
     FROM comments 
     JOIN articles ON articles.article_id = comments.article_id
     GROUP BY articles.author,
-            articles.author,
             articles.title,
             articles.article_id,
             articles.topic,
