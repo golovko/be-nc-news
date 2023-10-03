@@ -3,6 +3,8 @@ const query = require("supertest");
 const seed = require("../db/seeds/seed");
 const db = require('../db/connection');
 const data = require('../db/data/test-data')
+require('jest-sorted');
+
 
 beforeEach(()=>{
   return seed(data);
@@ -61,7 +63,7 @@ describe('GET /api/articles', () => {
       .expect(200)
       .then((res) => {
           const article = res.body;
-          expect(typeof article.article_id).toBe('number');
+          expect(article.article_id).toBe(1);
           expect(typeof article.topic).toBe('string');
           expect(typeof article.author).toBe('string');
           expect(typeof article.body).toBe('string');
@@ -88,4 +90,29 @@ describe('GET /api/articles', () => {
           expect(errorMessage).toBe('Bad request');
       });
   });
+
+  test('should return array of articles sorted by created_at DESC', () => { 
+    return query(app)
+    .get('/api/articles/')
+    .expect(200)
+    .then((res) => {
+        const {articles} = res.body;
+        expect(articles.length).toBe(5);
+        articles.forEach(article => {
+          expect(articles).toBeSortedBy('created_at',{descending: true})
+          expect(article).toEqual(expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+          )
+        });
+    })
+ })
+
 })
