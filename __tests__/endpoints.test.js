@@ -150,4 +150,13 @@ describe('GET /api/articles/:article_id/comments', () => {
   .get('/api/articles/1d/comments')
   .expect(400)
  })
+  test('When an article has no comments returns status 200 and an empty array', () => { 
+    return query(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then((res) => {
+        const {comments} = res.body;
+        expect(comments.length).toBe(0);
+      })
+  })
 })

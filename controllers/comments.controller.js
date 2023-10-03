@@ -1,4 +1,3 @@
-const { reset } = require('nodemon');
 const { fetchComments, existenceCheck } = require('../models/comments.model.js');
 
 exports.getComments = (req, res, next) => {
