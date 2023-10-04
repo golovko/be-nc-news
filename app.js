@@ -4,7 +4,10 @@ const { getTopics } = require('./controllers/topics.controller.js');
 const { getEndpoints } = require('./controllers/endpoints.controller.js');
 const { getArticleById, getArticles } = require('./controllers/articles.controller.js');
 const { customErrors, psqlErrors } = require('./errors/errorHandler.js');
-const { getComments } = require('./controllers/comments.controller.js');
+const { getComments, postComments } = require('./controllers/comments.controller.js');
+
+app.use(express.json());
+
 // endpoints
 app.get('/api', getEndpoints);
 
@@ -17,6 +20,7 @@ app.get('/api/articles', getArticles);
 
 // comments
 app.get('/api/articles/:article_id/comments', getComments);
+app.post('/api/articles/:article_id/comments', postComments);
 
 //overriding default express error for endpoints that not exist 
 app.use((req, res, next) => {

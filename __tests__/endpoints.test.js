@@ -78,7 +78,7 @@ describe('GET /api/articles', () => {
       .expect(404)
       .then((res) => {
           const {errorMessage} = res.body;
-          expect(errorMessage).toBe('Not found');
+          expect(errorMessage).toBe('Article with id 10000 not found');
       });
   });
   test('should return 400 if provided id is not a number ', () => { 
@@ -118,7 +118,8 @@ describe('GET /api/articles', () => {
 
 // comments
 //GET /api/articles/:article_id/comments
-describe('GET /api/articles/:article_id/comments', () => { 
+describe('Comments:', () => {
+  describe('GET /api/articles/:article_id/comments', () => { 
   test('should return array of comments for an article sorted by created_at DESC ', () => { 
     return query(app)
     .get('/api/articles/1/comments')
@@ -158,5 +159,87 @@ describe('GET /api/articles/:article_id/comments', () => {
         const {comments} = res.body;
         expect(comments.length).toBe(0);
       })
+  })
+})
+//POST /api/articles/:article_id/comments
+  describe('POST /api/articles/:article_id/comments', () => { 
+  test('should add a comment for an article & return 201', () => { 
+      const comment = {
+        username: 'butter_bridge',
+        body: 'Comment text'
+      }
+      return query(app)
+      .post('/api/articles/4/comments')
+      .send(comment)
+      .expect(201)
+      .then((res) => {
+          const newComment = res.body;
+          expect(newComment.comment_id).toBe(19);
+          expect(newComment).toEqual(expect.objectContaining({
+            author: expect.any(String),
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number)
+          })
+          )
+     })
+  });
+  test('should return 404 if article not exist', () => { 
+    const comment = {
+      username: 'butter_bridge',
+      body: 'Comment text'
+    }
+    return query(app)
+    .post('/api/articles/4000/comments')
+    .send(comment)
+    .expect(404)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Element with id 4000 not found');
+  })
+  });
+  test('should return 400 if article id not valid', () => { 
+    const comment = {
+      username: 'butter_bridge',
+      body: 'Comment text'
+    }
+    return query(app)
+    .post('/api/articles/4s/comments')
+    .send(comment)
+    .expect(400)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Bad request');
+  })
+  });
+  test('should return 404 if user not exist', () => { 
+    const comment = {
+      username: 'sergii',
+      body: 'Comment text'
+    }
+    return query(app)
+    .post('/api/articles/4/comments')
+    .send(comment)
+    .expect(404)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Element with id sergii not found');
+  })
+  });
+  test('should return 400 if no username or body properties', () => { 
+    const comment = {
+      body: 'Comment text'
+    }
+    return query(app)
+    .post('/api/articles/4/comments')
+    .send(comment)
+    .expect(400)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Bad request. No username or body properties');
+  })
+  });
   })
 })

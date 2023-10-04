@@ -7,14 +7,10 @@ exports.fetchArticleById = (articleId) => {
     `, [articleId])
     .then((data) => {
         if(data.rows.length === 0) {
-            return Promise.reject({errorCode: 404})
+            return Promise.reject({errorCode: 404, errorMessage: `Article with id ${articleId} not found`})
         }
         return data.rows[0];
     })
-    .catch((err) =>{
-        return Promise.reject(err);
-        }
-    )
 }
 
 exports.fetchArticles = () => {
@@ -44,8 +40,4 @@ exports.fetchArticles = () => {
         }
         return data.rows;
     })
-    .catch((err) =>{
-        return Promise.reject(err);
-        }
-    )
 }

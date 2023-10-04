@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const {checkExists} = require('../utils/util');
 
 exports.fetchComments = (articleId) => {
     return db.query(`
@@ -10,24 +11,22 @@ exports.fetchComments = (articleId) => {
     .then((data) => {
         return data.rows;
     })
-    .catch((err) => {
-        return err;
-    })
 }
 
-exports.existenceCheck = (articleId) => {
+exports.saveComment = (newComment) => {
+    const comment = {
+        author: newComment.username, 
+        body: newComment.body, 
+        votes: 0,
+        article_id: newComment.article_id
+    }
+    const commentValues = Object.values(comment);
     return db.query(`
-        SELECT * FROM articles WHERE article_id = $1
-    `, [articleId])
+        INSERT INTO comments(author, body, votes, article_id) 
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `, commentValues)
     .then((data) => {
-        if(data.rows.length === 0) {
-            return Promise.reject({errorCode: 404})
-        }else {
-            return true;
-        }
+            return data.rows[0];
     })
-    .catch((err) => {
-        return err;
-    })
-
 }
