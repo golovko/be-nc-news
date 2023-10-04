@@ -5,6 +5,7 @@ const { getEndpoints } = require('./controllers/endpoints.controller.js');
 const { getArticleById, getArticles, patchArticle } = require('./controllers/articles.controller.js');
 const { customErrors, psqlErrors } = require('./errors/errorHandler.js');
 const { getComments, postComments, deleteComment } = require('./controllers/comments.controller.js');
+const { getUsers } = require('./controllers/users.controller.js');
 
 app.use(express.json());
 
@@ -23,6 +24,9 @@ app.patch('/api/articles/:article_id', patchArticle)
 app.get('/api/articles/:article_id/comments', getComments);
 app.post('/api/articles/:article_id/comments', postComments);
 app.delete('/api/comments/:comment_id', deleteComment);
+
+// users
+app.get('/api/users', getUsers);
 
 //overriding default express error for endpoints that not exist 
 app.use((req, res, next) => {

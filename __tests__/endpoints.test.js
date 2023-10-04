@@ -157,7 +157,7 @@ describe('Comments:', () => {
     .expect(200)
     .then((res) => {
         const {comments} = res.body;
-        expect(comments.length).toBe(0);
+        expect(comments).toEqual([]);
       })
   })
 })
@@ -327,4 +327,24 @@ test('should return 400 if body doesn`t contain valid inc_votes', () => {
 });
 })
 
+// users
 
+describe('GET /api/users', () => { 
+  test('should return 200 and array of users', () => { 
+    return query(app)
+    .get('/api/users')
+    .expect(200)
+    .then((res) => {
+      const { users } = res.body;
+      expect(users.length).toBe(4);
+      users.forEach(user => {
+        expect(user).toEqual(expect.objectContaining({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url: expect.any(String)
+        })
+        )
+    })
+   })
+ })
+})
