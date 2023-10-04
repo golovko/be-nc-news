@@ -1,6 +1,6 @@
 const db = require('../db/connection');
 
-exports.fetchArticleById = (articleId) => {
+fetchArticleById = (articleId) => {
     return db.query(`
         SELECT * FROM articles
         WHERE article_id = $1
@@ -12,6 +12,7 @@ exports.fetchArticleById = (articleId) => {
         return data.rows[0];
     })
 }
+module.exports.fetchArticleById = fetchArticleById;
 
 exports.fetchArticles = () => {
     return db.query(`
@@ -40,4 +41,20 @@ exports.fetchArticles = () => {
         }
         return data.rows;
     })
+}
+
+exports.updateArticle = (article) => {
+    return fetchArticleById(article.article_id)
+    .then((data) => {
+        return db.query(`
+        UPDATE articles
+        SET votes = $1
+        WHERE article_id = $2
+        RETURNING *;
+    `, [data.votes + article.inc_votes, article.article_id])
+    })
+    .then((data) => {
+        return data.rows[0];
+    })
+
 }

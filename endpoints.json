@@ -50,5 +50,21 @@
     "article_id": 9,
     "created_at": 1586179020000
   }
+  },
+  "PATCH /api/articles/:article_id":{
+    "description": "update an article by article_id",
+    "request": {
+      "inc_votes": 100500
+    },
+    "exampleResponse": {
+      "article_id": 1,
+      "title": "Seafood substitutions are increasing",
+      "topic": "cooking",
+      "author": "weegembump",
+      "created_at": "2018-05-30T15:59:13.341Z",
+      "votes": 0,
+      "article_img_url":"https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg",
+      "comment_count": 6
+    }
   }
 }

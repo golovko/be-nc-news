@@ -243,3 +243,59 @@ describe('Comments:', () => {
   });
   })
 })
+
+// PATCH /api/articles/:article_id
+describe('PATCH /api/articles/:article_id', () => { 
+  test('should update an article and return 201 + updated article', () => { 
+      const updatingArticle = {
+        inc_votes: 100500,
+      }
+      return query(app)
+      .patch('/api/articles/1')
+      .send(updatingArticle)
+      .expect(201)
+      .then((res) => {
+          const {article} = res.body;
+          expect(article.votes).toEqual(100600)
+     })
+  });
+    test('should return 404 if article not exist', () => { 
+      const updatingArticle = {
+        inc_votes: 100500,
+      }
+      return query(app)
+      .patch('/api/articles/10000')
+      .send(updatingArticle)
+      .expect(404)
+      .then((res) => {
+        const {errorMessage} = res.body;
+        expect(errorMessage).toBe('Article with id 10000 not found');
+      })  
+  });
+  test('should return 400 if article id not valid', () => { 
+    const updatingArticle = {
+      inc_votes: 100500,
+    }
+    return query(app)
+    .patch('/api/articles/1s')
+    .send(updatingArticle)
+    .expect(400)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Bad request');
+    })  
+});
+test('should return 400 if body doesn`t contain valid inc_votes', () => { 
+  const updatingArticle = {
+    inc_votes: 'ghj',
+  }
+  return query(app)
+  .patch('/api/articles/1s')
+  .send(updatingArticle)
+  .expect(400)
+  .then((res) => {
+    const {errorMessage} = res.body;
+    expect(errorMessage).toBe('Invalid body');
+  })  
+});
+})
