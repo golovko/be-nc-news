@@ -114,5 +114,49 @@ describe('GET /api/articles', () => {
         });
     })
  })
+})
 
+// comments
+//GET /api/articles/:article_id/comments
+describe('GET /api/articles/:article_id/comments', () => { 
+  test('should return array of comments for an article sorted by created_at DESC ', () => { 
+    return query(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then((res) => {
+        const {comments} = res.body;
+        expect(comments.length).toBe(11);
+        comments.forEach(comment => {
+          expect(comments).toBeSortedBy('created_at',{descending: true})
+          expect(comment).toEqual(expect.objectContaining({
+            author: expect.any(String),
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number)
+          })
+          )
+        });
+    })
+ })
+ test('should return 404 if article with provided id not exist ', () => { 
+  return query(app)
+  .get('/api/articles/1000000/comments')
+  .expect(404)
+ })
+ test('should return 400 if id not valid ', () => { 
+  return query(app)
+  .get('/api/articles/1d/comments')
+  .expect(400)
+ })
+  test('When an article has no comments returns status 200 and an empty array', () => { 
+    return query(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then((res) => {
+        const {comments} = res.body;
+        expect(comments.length).toBe(0);
+      })
+  })
 })
