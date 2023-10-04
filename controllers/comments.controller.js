@@ -1,7 +1,7 @@
 const { 
     fetchComments, 
-    existenceCheck, 
-    saveComment } = require('../models/comments.model.js');
+    saveComment,
+    removeComment } = require('../models/comments.model.js');
 const { checkExists }  = require('../utils/util.js');
 
 exports.getComments = (req, res, next) => {
@@ -41,6 +41,16 @@ exports.postComments = (req, res, next) => {
         res.status(201).send(result);
     })
     .catch((err)=>{
+        next(err);
+    })
+}
+
+exports.deleteComment = (req, res, next) => {
+    return removeComment(req.params.comment_id)
+    .then(() =>{
+        res.status(204).send({message: 'Deleted'});
+    })
+    .catch((err) => {
         next(err);
     })
 }

@@ -242,6 +242,33 @@ describe('Comments:', () => {
   })
   });
   })
+
+  //DELETE /api/comments/:comment_id
+  describe.only('DELETE /api/comments/:comment_id', () => { 
+    test('should delete comment by id and return 204', () => { 
+      return query(app)
+      .delete('/api/comments/1')
+      .expect(204)
+     })
+    test('should return 400 if id not valid', () => { 
+      return query(app)
+      .delete('/api/comments/1s')
+      .expect(400)
+      .then((res) => {
+        const {errorMessage} = res.body;
+        expect(errorMessage).toBe('Bad request')
+      })
+    })
+    test('should return 404 if comment not exists', () => { 
+      return query(app)
+      .delete('/api/comments/10000')
+      .expect(404)
+      .then((res) => {
+        const {errorMessage} = res.body;
+        expect(errorMessage).toBe('Comment not found')
+      })
+    })
+   })
 })
 
 // PATCH /api/articles/:article_id
@@ -299,3 +326,5 @@ test('should return 400 if body doesn`t contain valid inc_votes', () => {
   })  
 });
 })
+
+

@@ -30,3 +30,14 @@ exports.saveComment = (newComment) => {
             return data.rows[0];
     })
 }
+
+exports.removeComment = (commentId) => {
+    return db.query(`
+        DELETE FROM comments
+        WHERE comment_id = $1;
+    `, [commentId])
+    .then((data) => {
+        if(data.rowCount > 0) return true;
+        else return Promise.reject({errorCode: 404, errorMessage: "Comment not found"})
+    })
+}
