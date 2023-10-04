@@ -244,7 +244,7 @@ describe('Comments:', () => {
   })
 
   //DELETE /api/comments/:comment_id
-  describe.only('DELETE /api/comments/:comment_id', () => { 
+  describe('DELETE /api/comments/:comment_id', () => { 
     test('should delete comment by id and return 204', () => { 
       return query(app)
       .delete('/api/comments/1')
