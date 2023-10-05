@@ -72,6 +72,16 @@ describe('GET /api/articles', () => {
           expect(typeof article.article_img_url).toBe('string');
       });
   });
+  test('should return article with a comment_count field', () => { 
+    return query(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then((res) => {
+          const article = res.body;
+          expect(article.comment_count).toBe(11);
+      });
+  });
+
   test('should return 404 if no articles found with provided id ', () => { 
     return query(app)
       .get('/api/articles/10000')
