@@ -259,7 +259,7 @@ describe('Comments:', () => {
     .expect(404)
     .then((res) => {
       const {errorMessage} = res.body;
-      expect(errorMessage).toBe('Element with id sergii not found');
+      expect(errorMessage).toBe('Not found');
   })
   });
   test('should return 400 if no username or body properties', () => { 
@@ -307,14 +307,14 @@ describe('Comments:', () => {
 
 // PATCH /api/articles/:article_id
 describe('PATCH /api/articles/:article_id', () => { 
-  test('should update an article and return 201 + updated article', () => { 
+  test('should update an article and return 200 + updated article', () => { 
       const updatingArticle = {
         inc_votes: 100500,
       }
       return query(app)
       .patch('/api/articles/1')
       .send(updatingArticle)
-      .expect(201)
+      .expect(200)
       .then((res) => {
           const {article} = res.body;
           expect(article.votes).toEqual(100600)
@@ -351,7 +351,7 @@ test('should return 400 if body doesn`t contain valid inc_votes', () => {
     inc_votes: 'ghj',
   }
   return query(app)
-  .patch('/api/articles/1s')
+  .patch('/api/articles/1')
   .send(updatingArticle)
   .expect(400)
   .then((res) => {

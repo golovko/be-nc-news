@@ -25,16 +25,13 @@ exports.getArticles = (req, res, next) => {
 
 // patch
 exports.patchArticle = (req, res, next) => {
-    if(isNaN(req.body.inc_votes)) {
-        next({errorCode: 400, errorMessage: 'Invalid body'})
-    }
     const updatingArticle = {
         article_id: Number(req.params.article_id),
         inc_votes: req.body.inc_votes
     }
     return updateArticle(updatingArticle)
     .then((article) => {
-        res.status(201).send({article});
+        res.status(200).send({article});
     })
     .catch((err)=>{
         next(err);

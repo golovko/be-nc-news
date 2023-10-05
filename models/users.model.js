@@ -7,7 +7,7 @@ exports.fetchUsers = () => {
     `)
     .then((data) => {
         if(data.rows.length === 0) {
-            return Promise.reject({errorCode: 404, errorMessage: 'User not found'})
+            return Promise.reject({errorCode: 404, errorMessage: 'Users not found'})
         }
         return data.rows;
     })

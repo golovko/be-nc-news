@@ -25,15 +25,8 @@ exports.getComments = (req, res, next) => {
 
 exports.postComments = (req, res, next) => {
     const newComment = req.body;
-    if(!newComment.body || !newComment.username) {
-        next({errorCode: 400, errorMessage: 'Bad request. No username or body properties'})
-    }
     newComment.article_id = Number(req.params.article_id);
-    const promises = [
-        checkExists('articles', 'article_id', newComment.article_id ),
-        checkExists('users', 'username', newComment.username ) ]
-    
-        return Promise.all(promises)
+    return checkExists('articles', 'article_id', newComment.article_id )
     .then((result) => {
         return saveComment(newComment)
     })
@@ -48,7 +41,7 @@ exports.postComments = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
     return removeComment(req.params.comment_id)
     .then(() =>{
-        res.status(204).send({message: 'Deleted'});
+        res.status(204).send();
     })
     .catch((err) => {
         next(err);

@@ -14,19 +14,22 @@ exports.fetchComments = (articleId) => {
 }
 
 exports.saveComment = (newComment) => {
+    if(!newComment.body || !newComment.username) {
+        return Promise.reject({errorCode: 400, errorMessage: 'Bad request. No username or body properties'})
+    }
     const comment = {
         author: newComment.username, 
         body: newComment.body, 
-        votes: 0,
         article_id: newComment.article_id
     }
     const commentValues = Object.values(comment);
     return db.query(`
-        INSERT INTO comments(author, body, votes, article_id) 
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO comments(author, body, article_id) 
+        VALUES ($1, $2, $3)
         RETURNING *
         `, commentValues)
     .then((data) => {
+        //console.log(data);
             return data.rows[0];
     })
 }

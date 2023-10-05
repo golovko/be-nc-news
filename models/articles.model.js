@@ -69,16 +69,19 @@ exports.fetchArticles = (topic) => {
 }
 
 exports.updateArticle = (article) => {
-    return fetchArticleById(article.article_id)
-    .then((data) => {
+    if(isNaN(article.inc_votes)) {
+        return Promise.reject({errorCode: 400, errorMessage: 'Invalid body'})
+    }
         return db.query(`
         UPDATE articles
-        SET votes = $1
+        SET votes = votes + $1
         WHERE article_id = $2
         RETURNING *;
-    `, [data.votes + article.inc_votes, article.article_id])
-    })
+    `, [article.inc_votes, article.article_id])
     .then((data) => {
+        if(data.rows.length === 0) {
+            return Promise.reject({errorCode: 404, errorMessage: `Article with id ${article.article_id} not found`})
+        }
         return data.rows[0];
     })
 }
