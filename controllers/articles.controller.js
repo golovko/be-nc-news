@@ -12,7 +12,9 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    return fetchArticles()
+    let topic = '';
+    if(req.query.topic) topic = req.query.topic;
+    return fetchArticles(topic)
     .then((articles) => {
         res.status(200).send({articles});
     })

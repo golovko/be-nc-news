@@ -113,7 +113,31 @@ describe('GET /api/articles', () => {
           )
         });
     })
- })
+  })
+ // GET /api/articles (topic query)
+  test('should return array of articles filtered by query topic', () => { 
+  return query(app)
+  .get('/api/articles/?topic=mitch')
+  .expect(200)
+  .then((res) => {
+      const {articles} = res.body;
+      expect(articles.length).toBe(4);
+      articles.forEach(article => {
+        expect(articles).toBeSortedBy('created_at',{descending: true})
+        expect(article.topic).toBe('mitch')
+      })
+    })
+  })
+  test('should return 404 if topic not exist', () => { 
+    return query(app)
+    .get('/api/articles/?topic=ditch')
+    .expect(404)
+    .then((res) => {
+        const {errorMessage} = res.body;
+        expect(errorMessage).toBe('Not found');
+        
+      })
+    })
 })
 
 // comments

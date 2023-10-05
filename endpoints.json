@@ -11,6 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
+    "queries": ["topic"],
     "exampleResponse": {
       "articles": [
         {

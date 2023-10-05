@@ -14,7 +14,13 @@ fetchArticleById = (articleId) => {
 }
 module.exports.fetchArticleById = fetchArticleById;
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (topic) => {
+    let whereClause = '';
+    let values = [];
+    if(topic) {
+        whereClause = `WHERE articles.topic = $1`;
+        values.push(topic)
+    }
     return db.query(`
     SELECT articles.author,
             articles.title,
@@ -26,6 +32,7 @@ exports.fetchArticles = () => {
     CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count 
     FROM comments 
     JOIN articles ON articles.article_id = comments.article_id
+    ${whereClause}
     GROUP BY articles.author,
             articles.title,
             articles.article_id,
@@ -34,10 +41,10 @@ exports.fetchArticles = () => {
             articles.votes,
             article_img_url
     ORDER BY articles.created_at DESC;
-    `)
+    `, values)
     .then((data) => {
         if(data.rows.length === 0) {
-            return Promise.reject({errorCode: 404})
+            return Promise.reject({errorCode: 404, errorMessage: 'Not found'})
         }
         return data.rows;
     })
@@ -56,5 +63,4 @@ exports.updateArticle = (article) => {
     .then((data) => {
         return data.rows[0];
     })
-
 }
