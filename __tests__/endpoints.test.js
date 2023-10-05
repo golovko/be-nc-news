@@ -275,7 +275,33 @@ describe('Comments:', () => {
       expect(errorMessage).toBe('Bad request. No username or body properties');
   })
   });
-  })
+
+  test("should ignore unnecessary properties, returns 201", () => {
+    const comment = {
+      username: "butter_bridge",
+      body: "Comment text",
+      wrongProp: "text",
+    };
+    return query(app)
+    .post("/api/articles/4/comments")
+    .send(comment)
+    .expect(201)
+    .then((res) => {
+      const newComment = res.body;
+      expect(newComment.comment_id).toBe(19);
+      expect(newComment).toEqual(
+        expect.objectContaining({
+          author: expect.any(String),
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+        })
+      );
+    });
+  });
+})
 
   //DELETE /api/comments/:comment_id
   describe('DELETE /api/comments/:comment_id', () => { 
