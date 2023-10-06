@@ -16,6 +16,9 @@ exports.psqlErrors = (err, req, res, next) => {
     } else if(err.code === '23503'){
         console.log(err);
         err = { errorCode: 404, errorMessage: 'Not found' };        
+    } else if(err.code === '42703') {
+        console.log(err);
+        err = {errorCode: 400, errorMessage: 'Column does not exist'};
     }
     next(err);
 }
