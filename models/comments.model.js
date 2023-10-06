@@ -44,3 +44,22 @@ exports.removeComment = (commentId) => {
         else return Promise.reject({errorCode: 404, errorMessage: "Comment not found"})
     })
 }
+
+//updateComment
+exports.updateComment = (comment) => {
+    if(isNaN(comment.inc_votes)) {
+        return Promise.reject({errorCode: 400, errorMessage: 'Invalid body'})
+    }
+        return db.query(`
+        UPDATE comments
+        SET votes = votes + $1
+        WHERE comment_id = $2
+        RETURNING *;
+    `, [comment.inc_votes, comment.comment_id])
+    .then((data) => {
+        if(data.rows.length === 0) {
+            return Promise.reject({errorCode: 404, errorMessage: `Comment with id ${comment.comment_id} not found`})
+        }
+        return data.rows[0];
+    })
+}

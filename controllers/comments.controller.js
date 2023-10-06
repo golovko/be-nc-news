@@ -1,7 +1,8 @@
 const { 
     fetchComments, 
     saveComment,
-    removeComment } = require('../models/comments.model.js');
+    removeComment,
+    updateComment } = require('../models/comments.model.js');
 const { checkExists }  = require('../utils/util.js');
 
 exports.getComments = (req, res, next) => {
@@ -44,6 +45,20 @@ exports.deleteComment = (req, res, next) => {
         res.status(204).send();
     })
     .catch((err) => {
+        next(err);
+    })
+}
+
+exports.patchComment = (req, res, next) => {
+    const comment = {
+        comment_id: Number(req.params.comment_id),
+        inc_votes: req.body.inc_votes
+    }
+    return updateComment(comment)
+    .then((updatedComment) => {
+        res.status(200).send({updatedComment});
+    })
+    .catch((err)=>{
         next(err);
     })
 }

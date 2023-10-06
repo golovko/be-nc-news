@@ -361,6 +361,63 @@ describe('Comments:', () => {
    })
 })
 
+// /api/comments/:comment_id
+describe('/api/comments/:comment_id', () => { 
+  test('should update a comment and return 200 + updated comment', () => { 
+      const comment = {
+        inc_votes: 10,
+      }
+      return query(app)
+      .patch('/api/comments/1')
+      .send(comment)
+      .expect(200)
+      .then((res) => {
+          const {updatedComment} = res.body;
+          expect(updatedComment.votes).toEqual(26)
+     })
+  });
+    test('should return 404 if comment not exist', () => { 
+      const comment = {
+        inc_votes: 10,
+      }
+      return query(app)
+      .patch('/api/comments/10000')
+      .send(comment)
+      .expect(404)
+      .then((res) => {
+        const {errorMessage} = res.body;
+        expect(errorMessage).toBe('Comment with id 10000 not found');
+      })  
+  });
+  test('should return 400 if comment id not valid', () => { 
+    const comment = {
+      inc_votes: 10,
+    }
+    return query(app)
+    .patch('/api/comments/1s')
+    .send(comment)
+    .expect(400)
+    .then((res) => {
+      const {errorMessage} = res.body;
+      expect(errorMessage).toBe('Bad request');
+    })  
+});
+test('should return 400 if body doesn`t contain valid inc_votes', () => { 
+  const comment = {
+    inc_votes: "a10",
+  }
+  return query(app)
+  .patch('/api/comments/1')
+  .send(comment)
+  .expect(400)
+  .then((res) => {
+    const {errorMessage} = res.body;
+    expect(errorMessage).toBe('Invalid body');
+  })  
+});
+})
+
+
 // PATCH /api/articles/:article_id
 describe('PATCH /api/articles/:article_id', () => { 
   test('should update an article and return 200 + updated article', () => { 
