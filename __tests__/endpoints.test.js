@@ -438,3 +438,25 @@ describe('GET /api/users', () => {
    })
  })
 })
+
+//GET /api/users/:username
+describe('GET /api/users/:username', () => { 
+  test('should return 200 and a user object', () => { 
+    return query(app)
+    .get('/api/users/butter_bridge')
+    .expect(200)
+    .then((res) => {
+      const user = res.body;
+        expect(user.username).toBe("butter_bridge")
+    })
+  })
+  test('should return 404 if user not exist', () => { 
+    return query(app)
+    .get('/api/users/sergii')
+    .expect(404)
+    .then((res) => {
+      const {errorMessage} = res.body;
+        expect(errorMessage).toBe("User not found")
+    })
+  })
+})
