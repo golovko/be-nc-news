@@ -124,6 +124,36 @@ describe('GET /api/articles', () => {
         });
     })
   })
+ // GET /api/articles (sorting queries)
+ test('should return array of articles sorted by any valid column on asc order', () => { 
+  return query(app)
+  .get('/api/articles/?sort_by=author&order=asc')
+  .expect(200)
+  .then((res) => {
+      const {articles} = res.body;
+      expect(articles.length).toBe(5);
+      articles.forEach(article => {
+        expect(articles).toBeSortedBy('author',{descending: false})
+      })
+    })
+  })
+  test('should return 400 - Invalid sort query', () => { 
+    return query(app)
+    .get('/api/articles/?sort_by=blabla&order=asc')
+    .expect(400)
+    .then((res) => {
+        expect(res.body.errorMessage).toBe('Invalid sort query');
+      })
+    })
+  test('should return 400 - Invalid order query', () => { 
+    return query(app)
+    .get('/api/articles/?sort_by=author&order=abc')
+    .expect(400)
+    .then((res) => {
+        expect(res.body.errorMessage).toBe('Invalid order query');
+      })
+    })
+
  // GET /api/articles (topic query)
   test('should return array of articles filtered by query topic', () => { 
   return query(app)

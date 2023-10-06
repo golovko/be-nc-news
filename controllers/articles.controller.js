@@ -12,9 +12,10 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    let topic = '';
-    if(req.query.topic) topic = req.query.topic;
-    return fetchArticles(topic)
+    let topic = req.query.topic;
+    let sortBy = req.query.sort_by;
+    let order = req.query.order;
+    return fetchArticles(topic, sortBy, order)
     .then((articles) => {
         res.status(200).send({articles});
     })

@@ -32,7 +32,20 @@ fetchArticleById = (articleId) => {
 }
 module.exports.fetchArticleById = fetchArticleById;
 
-exports.fetchArticles = (topic) => {
+exports.fetchArticles = (topic, sortBy, order) => {
+    if (sortBy && ![
+        'author',
+        'title',
+        'article_id',
+        'topic',
+        'created_at',
+        'votes'].includes(sortBy)) {
+        return Promise.reject({ errorCode: 400, errorMessage: 'Invalid sort query' });
+      }
+      if (order && !['asc', 'desc'].includes(order)) {
+        return Promise.reject({ errorCode: 400, errorMessage: 'Invalid order query' });
+      }
+      const orderClause = `ORDER BY ${sortBy || 'articles.created_at'} ${order || 'DESC'}`;
     let whereClause = '';
     let values = [];
     if(topic) {
@@ -58,7 +71,7 @@ exports.fetchArticles = (topic) => {
             articles.created_at,
             articles.votes,
             article_img_url
-    ORDER BY articles.created_at DESC;
+    ${orderClause}
     `, values)
     .then((data) => {
         if(data.rows.length === 0) {
