@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const {checkExists} = require('../utils/util');
 
 exports.fetchComments = (articleId) => {
     return db.query(`
@@ -10,24 +11,36 @@ exports.fetchComments = (articleId) => {
     .then((data) => {
         return data.rows;
     })
-    .catch((err) => {
-        return err;
+}
+
+exports.saveComment = (newComment) => {
+    if(!newComment.body || !newComment.username) {
+        return Promise.reject({errorCode: 400, errorMessage: 'Bad request. No username or body properties'})
+    }
+    const comment = {
+        author: newComment.username, 
+        body: newComment.body, 
+        article_id: newComment.article_id
+    }
+    const commentValues = Object.values(comment);
+    return db.query(`
+        INSERT INTO comments(author, body, article_id) 
+        VALUES ($1, $2, $3)
+        RETURNING *
+        `, commentValues)
+    .then((data) => {
+        //console.log(data);
+            return data.rows[0];
     })
 }
 
-exports.existenceCheck = (articleId) => {
+exports.removeComment = (commentId) => {
     return db.query(`
-        SELECT * FROM articles WHERE article_id = $1
-    `, [articleId])
+        DELETE FROM comments
+        WHERE comment_id = $1;
+    `, [commentId])
     .then((data) => {
-        if(data.rows.length === 0) {
-            return Promise.reject({errorCode: 404})
-        }else {
-            return true;
-        }
+        if(data.rowCount > 0) return true;
+        else return Promise.reject({errorCode: 404, errorMessage: "Comment not found"})
     })
-    .catch((err) => {
-        return err;
-    })
-
 }

@@ -11,6 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
+    "queries": ["topic"],
     "exampleResponse": {
       "articles": [
         {
@@ -36,7 +37,8 @@
       "body": "Text from the article..",
       "created_at": "2018-05-30T15:59:13.341Z",
       "votes": 0,
-      "article_img_url": "https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg"
+      "article_img_url": "https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg",
+      "comment_count": 11
     }
   },
   "GET /api/articles/:article_id/comments": {
@@ -50,5 +52,47 @@
     "article_id": 9,
     "created_at": 1586179020000
   }
+  },
+  "PATCH /api/articles/:article_id":{
+    "description": "update an article by article_id",
+    "request": {
+      "inc_votes": 100500
+    },
+    "exampleResponse": {
+      "article_id": 1,
+      "title": "Seafood substitutions are increasing",
+      "topic": "cooking",
+      "author": "weegembump",
+      "created_at": "2018-05-30T15:59:13.341Z",
+      "votes": 0,
+      "article_img_url":"https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500.jpg",
+      "comment_count": 6
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "add a comment for an article.",
+    "request": {
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "username": "butter_bridge"
+    },
+    "exampleResponse": {
+      "comment_id": 1,
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 16,
+      "author": "butter_bridge",
+      "article_id": 9,
+      "created_at": 1586179020000
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [{
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }]
+    }
   }
 }
