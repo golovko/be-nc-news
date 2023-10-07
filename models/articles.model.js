@@ -98,3 +98,22 @@ exports.updateArticle = (article) => {
         return data.rows[0];
     })
 }
+
+exports.saveArticle = (article) => {
+    if(!article.title || !article.body || !article.author || !article.topic) {
+        return Promise.reject({errorCode: 400, errorMessage: 'Bad request. Article doesn`t have required properties'})
+    }
+    if(!article.article_img_url) article.article_img_url = 'http://default.img/url';
+    return db.query(`
+        INSERT INTO articles(author, body, title, topic, article_img_url) 
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+        `, [article.author, article.body, article.title, article.topic, article.article_img_url])
+    
+        .then((data) => {
+            const result = data.rows[0];
+            result.comment_count = 0;
+            return result;
+    })
+
+}
