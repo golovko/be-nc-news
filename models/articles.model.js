@@ -163,3 +163,20 @@ exports.saveArticle = (article) => {
       return result;
     });
 };
+
+exports.removeArticle = (article_id) => {
+  return db.query(`
+    DELETE FROM comments
+    WHERE article_id = $1;
+  `, [article_id])
+  .then(() => {
+    return db.query(`
+        DELETE FROM articles
+        WHERE article_id = $1;
+    `, [article_id])
+  })
+  .then((data) => {
+      if(data.rowCount > 0) return true;
+      else return Promise.reject({errorCode: 404, errorMessage: "Article not found"})
+  })
+}

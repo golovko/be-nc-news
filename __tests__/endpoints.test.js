@@ -312,6 +312,32 @@ describe("POST /api/articles", () => {
       });
   });
 });
+// DELETE /api/articles/:article_id
+describe("DELETE /api/articles/:article_id", () => {
+  test("should delete an article by id and corresponding comments and return 204", () => {
+    return query(app)
+    .delete("/api/articles/1")
+    .expect(204);
+  });
+  test("should return 400 if id not valid", () => {
+    return query(app)
+      .delete("/api/articles/1s")
+      .expect(400)
+      .then((res) => {
+        const { errorMessage } = res.body;
+        expect(errorMessage).toBe("Bad request");
+      });
+  });
+  test("should return 404 if comment not exists", () => {
+    return query(app)
+      .delete("/api/articles/10000")
+      .expect(404)
+      .then((res) => {
+        const { errorMessage } = res.body;
+        expect(errorMessage).toBe("Article not found");
+      });
+  });
+});
 
 // comments
 // GET /api/articles/:article_id/comments
