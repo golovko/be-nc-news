@@ -9,6 +9,17 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "add new topic.",
+    "request": {
+      "slug": "topic name here",
+      "description": "butter_bridge"
+    },
+    "exampleResponse": 
+      { 
+        "slug": "football", "description": "Footie!" 
+      }
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles",
     "queries": ["topic", "sort_by", "order", "p", "limit"],

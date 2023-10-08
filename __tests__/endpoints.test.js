@@ -29,6 +29,38 @@ describe("GET /api/topics", () => {
       });
   });
 });
+describe("POST /api/topics", () => {
+  test("should add new topic and return 201 + created topic", () => {
+   const topic = {
+    slug: "topic name here",
+    description: "description here"
+  }
+    return query(app)
+      .post("/api/topics/")
+      .send(topic)
+      .expect(201)
+      .then((res) => {
+        const newTopic = res.body;
+        expect(typeof newTopic.description).toBe("string");
+        expect(typeof newTopic.slug).toBe("string");      });
+  });
+  test("should return 400 if not all required properties sent", () => {
+    const topic = {
+      //slug: "topic name here",
+      description: "description here"
+    }
+    return query(app)
+      .post("/api/topics")
+      .send(topic)
+      .expect(400)
+      .then((res) => {
+        const { errorMessage } = res.body;
+        expect(errorMessage).toBe(
+          "Bad request. Topic doesn`t have required properties"
+        );
+      });
+  });
+});
 
 // general
 describe("general", () => {
