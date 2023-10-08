@@ -9,9 +9,9 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
-  "GET /api/articles": {
+  "GET /api/articles?p=2&limit=6&topic=weegembump&sortBy=created_at&order=asc": {
     "description": "serves an array of all articles",
-    "queries": ["topic", "author", "title", "article_id", "topic", "created_at", "votes"],
+    "queries": ["topic", "sort_by", "order", "p", "limit"],
     "exampleResponse": {
       "articles": [
         {

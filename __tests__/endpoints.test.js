@@ -78,7 +78,6 @@ describe("GET /api/articles", () => {
         expect(article.comment_count).toBe(11);
       });
   });
-
   test("should return 404 if no articles found with provided id ", () => {
     return query(app)
       .get("/api/articles/10000")
@@ -97,14 +96,13 @@ describe("GET /api/articles", () => {
         expect(errorMessage).toBe("Bad request");
       });
   });
-
   test("should return array of articles sorted by created_at DESC", () => {
     return query(app)
       .get("/api/articles/")
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        expect(articles.length).toBe(5);
+        expect(articles.length).toBe(10);
         articles.forEach((article) => {
           expect(articles).toBeSortedBy("created_at", { descending: true });
           expect(article).toEqual(
@@ -129,7 +127,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        expect(articles.length).toBe(5);
+        expect(articles.length).toBe(10);
         articles.forEach((article) => {
           expect(articles).toBeSortedBy("author", { descending: false });
         });
@@ -159,7 +157,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        expect(articles.length).toBe(4);
+        expect(articles.length).toBe(10);
         articles.forEach((article) => {
           expect(articles).toBeSortedBy("created_at", { descending: true });
           expect(article.topic).toBe("mitch");
@@ -175,8 +173,47 @@ describe("GET /api/articles", () => {
         expect(errorMessage).toBe("Not found");
       });
   });
-});
 
+// GET /api/articles (pagination)
+test("/api/articles should return 10 articles by default",()=>{
+  return query(app)
+  .get('/api/articles')
+  .expect(200)
+  .then((response)=>{
+    const {articles} = response.body;
+    expect(articles.length).toBe(10);
+  })
+})
+
+test("/api/articles should return 6 articles on page 2 when limit is set",()=>{
+  return query(app)
+  .get('/api/articles?p=2&limit=6')
+  .expect(200)
+  .then((response)=>{
+    const {articles} = response.body;
+    expect(articles.length).toBe(6);
+  })
+})
+
+test("/api/articles should return 6 articles on page 2 when limit is set and other queries are used",()=>{
+  return query(app)
+  .get('/api/articles?p=2&limit=6&topic=mitch&sortBy=created_at&order=asc')
+  .expect(200)
+  .then((response)=>{
+    const {articles} = response.body;
+    expect(articles.length).toBe(6);
+  })
+})
+test("/api/articles should return 400 if limit is not a number",()=>{
+  return query(app)
+  .get('/api/articles?p=2&limit=6a')
+  .expect(400)
+  .then((response)=>{
+    const {errorMessage} = response.body;
+    expect(errorMessage).toBe('Bad request');
+  })
+})
+});
 // POST article
 describe("POST /api/articles", () => {
   test("should add an article & return 201", () => {
@@ -245,7 +282,7 @@ describe("POST /api/articles", () => {
 });
 
 // comments
-//GET /api/articles/:article_id/comments
+// GET /api/articles/:article_id/comments
 describe("GET /api/articles/:article_id/comments", () => {
   test("should return array of comments for an article sorted by created_at DESC ", () => {
     return query(app)
@@ -286,7 +323,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-//POST /api/articles/:article_id/comments
+// POST /api/articles/:article_id/comments
 describe("POST /api/articles/:article_id/comments", () => {
   test("should add a comment for an article & return 201", () => {
     const comment = {
@@ -397,7 +434,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-//DELETE /api/comments/:comment_id
+// DELETE /api/comments/:comment_id
 describe("DELETE /api/comments/:comment_id", () => {
   test("should delete comment by id and return 204", () => {
     return query(app).delete("/api/comments/1").expect(204);
@@ -422,7 +459,7 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
-//PATCH /api/comments/:comment_id
+// PATCH /api/comments/:comment_id
 describe("PATCH /api/comments/:comment_id", () => {
   test("should update a comment and return 200 + updated comment", () => {
     const comment = {
@@ -556,7 +593,7 @@ describe("GET /api/users", () => {
   });
 });
 
-//GET /api/users/:username
+// GET /api/users/:username
 describe("GET /api/users/:username", () => {
   test("should return 200 and a user object", () => {
     return query(app)
