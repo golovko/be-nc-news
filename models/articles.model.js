@@ -68,7 +68,7 @@ exports.fetchArticles = (topic, sortBy, order, page, limit) => {
   }
 
   let limitValue = Number(limit) || 10;
-  let pageNum = Number(page) > 0 ? Number(page - 1) * limit : 0;
+  let pageNum = Number(page) > 0 ? (Number(page) - 1) * limit : 0;
   let limitPaging = `LIMIT $1 OFFSET $2`;
   values[0] = limitValue;
   values[1] = pageNum;

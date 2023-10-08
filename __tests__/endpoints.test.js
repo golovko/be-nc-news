@@ -290,7 +290,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then((res) => {
         const { comments } = res.body;
-        expect(comments.length).toBe(11);
+        expect(comments.length).toBe(10);
         comments.forEach((comment) => {
           expect(comments).toBeSortedBy("created_at", { descending: true });
           expect(comment).toEqual(
@@ -406,7 +406,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
-
   test("should ignore unnecessary properties, returns 201", () => {
     const comment = {
       username: "butter_bridge",
@@ -432,6 +431,36 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
+  // GET /api/articles/:article_id/comments (pagination)
+test("should return 10 comments by default",()=>{
+  return query(app)
+  .get('/api/articles/1/comments')
+  .expect(200)
+  .then((response)=>{
+    const {comments} = response.body;
+    expect(comments.length).toBe(10);
+  })
+})
+
+test("should return 5 comments on page 2 when limit is set",()=>{
+  return query(app)
+  .get('/api/articles/1/comments?p=2&limit=5')
+  .expect(200)
+  .then((response)=>{
+    const {comments} = response.body;
+    expect(comments.length).toBe(5);
+  })
+})
+
+test("should return 400 if limit is not a number",()=>{
+  return query(app)
+  .get('/api/articles/1/comments?p=2&limit=a')
+  .expect(400)
+  .then((response)=>{
+    const {errorMessage} = response.body;
+    expect(errorMessage).toBe('Bad request');
+  })
+})
 });
 
 // DELETE /api/comments/:comment_id

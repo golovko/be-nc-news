@@ -7,13 +7,14 @@ const { checkExists }  = require('../utils/util.js');
 
 exports.getComments = (req, res, next) => {
     const articleId = req.params.article_id;
-
+    const page = req.query.p
+    const limit = req.query.limit;
     return checkExists('articles', 'article_id', articleId)
     .then((data) => {
         if(!data){
             return Promise.reject(data);
         } else {        
-            return fetchComments(articleId)
+            return fetchComments(articleId, page, limit)
         }
     })
     .then((comments) => {

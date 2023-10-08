@@ -9,7 +9,7 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
-  "GET /api/articles?p=2&limit=6&topic=weegembump&sortBy=created_at&order=asc": {
+  "GET /api/articles": {
     "description": "serves an array of all articles",
     "queries": ["topic", "sort_by", "order", "p", "limit"],
     "exampleResponse": {
@@ -43,6 +43,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves all comments for an article",
+    "queries": ["p", "limit"],
     "exampleResponse":
   {
     "comment_id": 1,

@@ -1,13 +1,21 @@
 const db = require('../db/connection');
 const {checkExists} = require('../utils/util');
 
-exports.fetchComments = (articleId) => {
+exports.fetchComments = (articleId, page, limit) => {
+    const values = [];
+    values[0] = articleId;
+    let limitValue = Number(limit) || 10;
+    let pageNum = Number(page) > 0 ? (Number(page) - 1) * limit : 0;
+    let limitPaging = `LIMIT $2 OFFSET $3`;
+    values[1] = limitValue;
+    values[2] = pageNum;
     return db.query(`
         SELECT * 
         FROM comments 
         WHERE article_id = $1
-        ORDER BY created_at DESC;
-    `, [articleId])
+        ORDER BY created_at DESC
+        ${limitPaging}
+    `, values)
     .then((data) => {
         return data.rows;
     })
