@@ -1,18 +1,20 @@
 const { 
     fetchComments, 
     saveComment,
-    removeComment } = require('../models/comments.model.js');
+    removeComment,
+    updateComment } = require('../models/comments.model.js');
 const { checkExists }  = require('../utils/util.js');
 
 exports.getComments = (req, res, next) => {
     const articleId = req.params.article_id;
-
+    const page = req.query.p
+    const limit = req.query.limit;
     return checkExists('articles', 'article_id', articleId)
     .then((data) => {
         if(!data){
             return Promise.reject(data);
         } else {        
-            return fetchComments(articleId)
+            return fetchComments(articleId, page, limit)
         }
     })
     .then((comments) => {
@@ -44,6 +46,20 @@ exports.deleteComment = (req, res, next) => {
         res.status(204).send();
     })
     .catch((err) => {
+        next(err);
+    })
+}
+
+exports.patchComment = (req, res, next) => {
+    const comment = {
+        comment_id: Number(req.params.comment_id),
+        inc_votes: req.body.inc_votes
+    }
+    return updateComment(comment)
+    .then((updatedComment) => {
+        res.status(200).send({updatedComment});
+    })
+    .catch((err)=>{
         next(err);
     })
 }

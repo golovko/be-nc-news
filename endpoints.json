@@ -9,9 +9,20 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "add new topic.",
+    "request": {
+      "slug": "topic name here",
+      "description": "butter_bridge"
+    },
+    "exampleResponse": 
+      { 
+        "slug": "football", "description": "Footie!" 
+      }
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["topic", "author", "title", "article_id", "topic", "created_at", "votes"],
+    "queries": ["topic", "sort_by", "order", "p", "limit"],
     "exampleResponse": {
       "articles": [
         {
@@ -43,6 +54,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves all comments for an article",
+    "queries": ["p", "limit"],
     "exampleResponse":
   {
     "comment_id": 1,
@@ -102,5 +114,22 @@
         "name": "jonny",
         "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
     }
+  },
+  "PATCH /api/comments/:comment_id":{
+    "description": "update a comment by comment_id",
+    "request": {
+      "inc_votes": 100500
+    },
+    "exampleResponse": {
+      "comment_id": 1,
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 16,
+      "author": "butter_bridge",
+      "article_id": 9,
+      "created_at": 1586179020000
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "delete comment by comment_id"
   }
 }
